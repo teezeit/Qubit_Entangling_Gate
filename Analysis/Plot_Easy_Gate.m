@@ -1,0 +1,159 @@
+function [ ] = Plot_Easy_Gate(G,varargin)
+%PLOT_GATE Plots the Gate in 16 , 6 and 4 dimensions ( unless otherwise
+%specified in varargin)
+
+if length(varargin)>1
+    error('varargin wrong input');
+end
+
+Label16 ={...
+        '$\uparrow\uparrow\uparrow\uparrow$';...
+        '$\uparrow\uparrow\uparrow\downarrow$';...
+        '$\uparrow\uparrow\downarrow\uparrow$';...
+        '$\uparrow\uparrow\downarrow\downarrow$';...
+        '$\uparrow\downarrow\uparrow\uparrow$';...
+        '$\uparrow\downarrow\uparrow\downarrow$';...
+        '$\uparrow\downarrow\downarrow\uparrow$';...
+        '$\uparrow\downarrow\downarrow\downarrow$';...              
+        '$\downarrow\uparrow\uparrow\uparrow$';...
+        '$\downarrow\uparrow\uparrow\downarrow$';...
+        '$\downarrow\uparrow\downarrow\uparrow$';...
+        '$\downarrow\uparrow\downarrow\downarrow$';...
+        '$\downarrow\downarrow\uparrow\uparrow$';...
+        '$\downarrow\downarrow\uparrow\downarrow$';...
+        '$\downarrow\downarrow\downarrow\uparrow$';...
+        '$\downarrow\downarrow\downarrow\downarrow$'...
+    };
+    
+    Label6 = {...
+        '$\uparrow\uparrow\downarrow\downarrow$';...
+        '$\uparrow\downarrow\uparrow\downarrow$';...
+        '$\uparrow\downarrow\downarrow\uparrow$';...
+        '$\downarrow\uparrow\uparrow\downarrow$';...
+        '$\downarrow\uparrow\downarrow\uparrow$';...
+        '$\downarrow\downarrow\uparrow\uparrow$';...
+        '$\downarrow\downarrow\uparrow\downarrow$'...
+    };
+    Label4 = {...
+        '$\uparrow\downarrow\uparrow\downarrow$';...
+        '$\uparrow\downarrow\downarrow\uparrow$';...
+        '$\downarrow\uparrow\uparrow\downarrow$';...
+        '$\downarrow\uparrow\downarrow\uparrow$';...
+        '$\downarrow\downarrow\uparrow\uparrow$';...
+    };
+
+
+
+%{
+
+
+
+ylabel({’$y(t)$’},...
+’FontUnits’,’points’,...
+’interpreter’,’latex’,...
+’FontSize’,9,...
+’FontName’,’Times’)
+xlabel(’Time(s)’,...
+’FontUnits’,’points’,...
+’FontWeight’,’normal’,...
+’FontSize’,7,...
+’FontName’,’Times’)
+
+legend({’$y=\sin(t)$’},...
+’FontUnits’,’points’,...
+’interpreter’,’latex’,...
+’FontSize’,7,...
+’FontName’,’Times’,...
+’Location’,’NorthEast’)
+title(’Sinusoidal function’,...
+’FontUnits’,’points’,...
+’FontWeight’,’normal’,...
+’FontSize’,7,...
+’FontName’,’Times’)
+
+
+%}
+
+
+
+figure
+
+
+
+suptitle('Matrix Elements of Unitary')
+
+sizeG=size(G,1);
+
+if sizeG == 16
+    x=3;
+elseif sizeG == 6
+    x=2;
+elseif sizeG== 4
+    x=1;
+end
+
+if not(isempty(varargin)) && strcmp(varargin{1},'single')
+ 
+    x=1;
+end
+
+i=1;
+
+if sizeG ==16
+valueastext = false;
+
+subplot(x,2,i)
+imagescValue(real(G),valueastext,'Re',Label16)
+i=i+1;
+
+subplot(x,2,i)
+imagescValue(imag(G),valueastext,'Im',Label16)
+i=i+1;
+
+if strcmp(varargin{1},'single')
+    return;
+end
+end
+
+
+if sizeG == 16 || sizeG == 6
+valueastext = true;
+
+subplot(x,2,i)
+imagescValue(ReduceDim(real(G),6),valueastext,'Re',Label6)
+rectangle('Position',[1.5 1.5 4 4])
+rectangle('Position',[0.5 0.5 1 1])
+rectangle('Position',[5.5 0.5 1 1])
+rectangle('Position',[5.5 5.5 1 1])
+rectangle('Position',[0.5 5.5 1 1])
+i=i+1;
+
+subplot(x,2,i)
+imagescValue(ReduceDim(imag(G),6),valueastext,'Im',Label6)
+rectangle('Position',[1.5 1.5 4 4])
+rectangle('Position',[0.5 0.5 1 1])
+rectangle('Position',[5.5 0.5 1 1])
+rectangle('Position',[5.5 5.5 1 1])
+rectangle('Position',[0.5 5.5 1 1])
+i=i+1;
+
+if not(isempty(varargin)) && strcmp(varargin{1},'single')
+    return;
+end
+end
+
+subplot(x,2,i)
+imagescValue(ReduceDim(real(G),4),valueastext,'Re',Label4)
+i=i+1;
+
+subplot(x,2,i)
+imagescValue(ReduceDim(imag(G),4),valueastext,'Im',Label4)
+i=i+1;
+
+
+set(gca,'FontSize',18)
+
+
+
+end
+
